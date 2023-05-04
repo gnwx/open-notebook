@@ -1,26 +1,28 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const StorySchema = new Schema({
-  title: {
-    type: String,
-    required: true,
+const StorySchema = new Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+    },
+    category: {
+      type: String,
+      enum: [
+        "Fantasy",
+        "Paranormal",
+        "Horror",
+        "Science Fiction",
+        "Humor",
+        "Poetry",
+        "Tik Tok fiction",
+        "Fiction",
+      ],
+      required: true,
+    },
   },
-  category: {
-    type: String,
-    enum: [
-      "Romance",
-      "Fantasy",
-      "Paranormal",
-      "Horror",
-      "Science Fiction",
-      "Humor",
-      "Poetry",
-      "Social media ",
-      "Fiction",
-    ],
-    required: true,
-  },
-});
+  { timestamps: true }
+);
 
 module.exports = mongoose.model("Story", StorySchema);

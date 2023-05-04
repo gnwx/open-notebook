@@ -1,14 +1,10 @@
 const Story = require("../models/storyModel");
 const StorySection = require("../models/storySectionModel");
-
 // Create a new story
 const createStory = async (req, res) => {
   try {
     const { title, category, author, body } = req.body;
 
-    if (!title || !category || !author || !body) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
     // add category validation.
     const story = await Story.create({ title, category });
 
@@ -92,22 +88,41 @@ const addConclusion = async (req, res) => {
 };
 
 //Retrieve all finished stories
-// const getFinishedStories = async (req, res) => {
-//   try {
-//     const stories = await Story.find({
-//       intro: { $exists: true },
-//       development: { $exists: true },
-//       conclusion: { $exists: true },
-//     })
-//       .lean()
-//       .exec();
+const getFinishedStories = async (req, res) => {
+  try {
+    const stories = await Story.find().lean();
+    const finishedStories = [];
+    for (const story of stories) {
+      const { _id } = story;
+      const numIntroSections = await StorySection.countDocuments({
+        storyId: _id,
+        type: "intro",
+      });
+      const numDevelopmentSections = await StorySection.countDocuments({
+        storyId: _id,
+        type: "development",
+      });
+      const numConclusionSections = await StorySection.countDocuments({
+        storyId: _id,
+        type: "conclusion",
+      });
 
-//     res.json({ stories: stories });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
+      if (
+        numIntroSections === 1 &&
+        numDevelopmentSections >= 1 &&
+        numConclusionSections === 1
+      ) {
+        const sections = await StorySection.find({ storyId: _id }).lean();
+
+        finishedStories.push({ ...story, sections });
+      }
+    }
+    res.status(200).json({ finishedStories });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 // Retrieve all unfinished stories
 
@@ -121,10 +136,27 @@ const addConclusion = async (req, res) => {
 //   }
 // };
 
+const getSingleStory = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const story = await Story.findById(id);
+    if (!story) {
+      throw new Error("Story couldn't find!");
+    }
+    const sections = await StorySection.find({ storyId: id });
+    const storyWithSections = { ...story._doc, sections };
+    res.json({ storyWithSections });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error });
+  }
+};
+
 module.exports = {
   createStory,
   addDevelopment,
   addConclusion,
-  // getFinishedStories,
+  getFinishedStories,
   // getUnfinishedStories,
+  getSingleStory,
 };
