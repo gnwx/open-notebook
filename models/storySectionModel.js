@@ -1,0 +1,25 @@
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+
+const StorySectionSchema = new mongoose.Schema({
+  storyId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Story",
+    required: true,
+  },
+  author: {
+    type: String,
+    required: true,
+  },
+  type: {
+    type: String,
+    enum: ["intro", "development", "conclusion"],
+    required: true,
+  },
+  body: {
+    type: String,
+    required: true,
+  },
+});
+
+module.exports = mongoose.model("StorySection", StorySectionSchema);
