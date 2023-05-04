@@ -1,5 +1,4 @@
 const Story = require("../models/storyModel");
-const StorySection = require("../models/storySectionModel");
 // Create a new story
 const createStory = async (req, res) => {
   try {
