@@ -17,6 +17,8 @@ const validateCreateStory = [
     ])
     .withMessage("Invalid category"),
   body("body")
+    .isLength({ min: 50 })
+    .withMessage("Text must be greater than 50 characters.")
     .isLength({ max: 350 })
     .withMessage("Body must be at most 350 characters"),
   (req, res, next) => {
