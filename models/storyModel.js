@@ -22,6 +22,30 @@ const StorySchema = new Schema(
       ],
       required: true,
     },
+    intro: {
+      author: {
+        type: String,
+      },
+      body: {
+        type: String,
+      },
+    },
+    development: {
+      author: {
+        type: String,
+      },
+      body: {
+        type: String,
+      },
+    },
+    conclusion: {
+      author: {
+        type: String,
+      },
+      body: {
+        type: String,
+      },
+    },
   },
   { timestamps: true }
 );
