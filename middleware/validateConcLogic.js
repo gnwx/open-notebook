@@ -1,6 +1,6 @@
 const StorySection = require("../models/storySectionModel");
 
-const validateConcSection = async (req, res, next) => {
+const validateConcLogic = async (req, res, next) => {
   const { id } = req.params;
   const noDev = await StorySection.findOne({
     storyId: id,
@@ -24,4 +24,4 @@ const validateConcSection = async (req, res, next) => {
   next();
 };
 
-module.exports = { validateConcSection };
+module.exports = { validateConcLogic };

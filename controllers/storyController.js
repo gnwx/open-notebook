@@ -5,7 +5,6 @@ const createStory = async (req, res) => {
   try {
     const { title, category, author, body } = req.body;
 
-    // add category validation.
     const story = await Story.create({ title, category });
 
     await StorySection.create({
@@ -20,7 +19,11 @@ const createStory = async (req, res) => {
       .json({ message: "Story created successfully", story: story });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+
+    if (error.code === 11000) {
+      return res.status(400).json({ message: "Title must be unique!" });
+    }
+    res.json({ error });
   }
 };
 
@@ -50,7 +53,7 @@ const addDevelopment = async (req, res) => {
     res.status(201).json({ message: "Development added to story" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ error });
   }
 };
 
@@ -83,7 +86,7 @@ const addConclusion = async (req, res) => {
     res.status(201).json({ message: "Conclusion added to story" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ error });
   }
 };
 
@@ -118,9 +121,9 @@ const getFinishedStories = async (req, res) => {
       }
     }
     res.status(200).json({ finishedStories });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error });
   }
 };
 

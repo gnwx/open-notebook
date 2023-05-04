@@ -1,6 +1,6 @@
 const StorySection = require("../models/storySectionModel");
 
-const validateDevSection = async (req, res, next) => {
+const validateDevLogic = async (req, res, next) => {
   const { id } = req.params;
   const noIntro = await StorySection.findOne({
     storyId: id,
@@ -21,4 +21,4 @@ const validateDevSection = async (req, res, next) => {
   next();
 };
 
-module.exports = { validateDevSection };
+module.exports = { validateDevLogic };

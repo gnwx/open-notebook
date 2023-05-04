@@ -1,7 +1,11 @@
 const express = require("express");
-const { validateDevSection } = require("../middleware/validateDevSection");
-const { validateConcSection } = require("../middleware/validateConcSection");
 const router = express.Router();
+
+//middlewares
+
+const { validateDevLogic } = require("../middleware/validateDevLogic");
+const { validateConcLogic } = require("../middleware/validateConcLogic");
+const { validateCreateStory } = require("../middleware/validateCreateStory");
 const {
   createStory,
   addDevelopment,
@@ -12,13 +16,13 @@ const {
 } = require("../controllers/storyController");
 
 //create new post || intro
-router.post("/create", createStory);
+router.post("/create", validateCreateStory, createStory);
 
 // add development to story || development
-router.patch("/dev/:id", validateDevSection, addDevelopment);
+router.patch("/dev/:id", validateDevLogic, addDevelopment);
 
 // add conclusion to story || conclusion
-router.patch("/conc/:id", validateConcSection, addConclusion);
+router.patch("/conc/:id", validateConcLogic, addConclusion);
 
 //get all finished stories
 router.get("/finished", getFinishedStories);

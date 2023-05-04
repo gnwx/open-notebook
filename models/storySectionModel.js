@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const StorySectionSchema = new mongoose.Schema(
+const StorySectionSchema = new Schema(
   {
     storyId: {
       type: mongoose.Schema.Types.ObjectId,
