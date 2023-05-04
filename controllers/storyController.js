@@ -33,16 +33,11 @@ const addDevelopment = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    const story = await Story.findById(id);
-
-    if (!story) {
-      return res.status(404).json({ message: "Story not found" });
-    }
     const dev = await Story.findByIdAndUpdate(id, {
       development: { author, body },
     });
 
-    res.status(201).json({ message: "Development added to story", dev });
+    res.status(201).json({ message: "Development added to story", story: dev });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error });

@@ -1,27 +1,20 @@
-const StorySection = require("../models/storySectionModel");
+const mongoose = require("mongoose");
+
+const Story = require("../models/storyModel");
 
 const validateConcLogic = async (req, res, next) => {
   const { id } = req.params;
-  const noDev = await StorySection.findOne({
-    storyId: id,
-    type: "development",
-  });
 
-  if (!noDev) {
-    return res.json({
-      message: "You can't add an ending to a story that has no development.",
-    });
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ message: "Invalid story ID" });
   }
-  const conclusion = await StorySection.findOne({
-    storyId: id,
-    type: "conclusion",
-  });
-  if (conclusion) {
-    return res.json({
-      message: "There is already a conclusion section for this story",
-    });
+
+  const story = await Story.findById(id).exists("conclusion");
+  if (story) {
+    return res.json({ message: "There is already a conclusion!" });
   }
-  next();
+
+  return next();
 };
 
 module.exports = { validateConcLogic };

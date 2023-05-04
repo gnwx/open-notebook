@@ -1,24 +1,17 @@
-const StorySection = require("../models/storySectionModel");
+const Story = require("../models/storyModel");
+const mongoose = require("mongoose");
 
 const validateDevLogic = async (req, res, next) => {
   const { id } = req.params;
-  const noIntro = await StorySection.findOne({
-    storyId: id,
-    type: "intro",
-  });
 
-  if (!noIntro) {
-    return res.json({
-      message: "You can't add an development to a story that has no intro.",
-    });
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ message: "Invalid story ID" });
   }
-  const dev = await StorySection.findOne({ storyId: id, type: "development" });
-  if (dev) {
-    return res.json({
-      message: "There is already a development section for this story",
-    });
+  const story = await Story.findById(id).exists("development");
+  if (story) {
+    return res.json({ message: "There is a dev already" });
   }
-  next();
+  return next();
 };
 
 module.exports = { validateDevLogic };
