@@ -7,6 +7,7 @@ const { validateDevLogic } = require("../middleware/validateDevLogic");
 const { validateConcLogic } = require("../middleware/validateConcLogic");
 const { validateCreateStory } = require("../middleware/validateCreateStory");
 const { validateBody } = require("../middleware/validateBody");
+
 const {
   createStory,
   addDevelopment,
@@ -29,7 +30,7 @@ router.patch("/conc/:id", validateConcLogic, validateBody, addConclusion);
 router.get("/finished", getFinishedStories);
 
 // // get all unfinished stories
-// router.get("/unfinished", getUnfinishedStories);
+router.get("/unfinished", getUnfinishedStories);
 
 // get single story
 router.get("/:id", getSingleStory);

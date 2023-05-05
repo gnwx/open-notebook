@@ -1,4 +1,5 @@
 const Story = require("../models/storyModel");
+
 // Create a new story
 const createStory = async (req, res) => {
   try {
@@ -16,6 +17,7 @@ const createStory = async (req, res) => {
   } catch (error) {
     console.error(error);
 
+    // handle title from schema validation
     if (error.code === 11000) {
       return res.status(400).json({ message: "Title must be unique!" });
     }
@@ -73,26 +75,36 @@ const addConclusion = async (req, res) => {
 //Retrieve all finished stories
 const getFinishedStories = async (req, res) => {
   try {
-    const stories = await Story.find().lean();
+    const stories = await Story.find({
+      intro: { $exists: true },
+      development: { $exists: true },
+      conclusion: { $exists: true },
+    })
+      .lean()
+      .orFail(new Error("There are no finished stories!"));
 
     res.status(200).json({ stories });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error });
+    res.status(500).json({ error: error.message });
   }
 };
 
 // Retrieve all unfinished stories
 
-// const getUnfinishedStories = async (req, res) => {
-//   try {
-
-//     res.json({ stories });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
+const getUnfinishedStories = async (req, res) => {
+  try {
+    const unfinishedStories = await Story.find({
+      conclusion: { $exists: false },
+    })
+      .lean()
+      .orFail(new Error("There are no unfinished stories!"));
+    res.json({ unfinishedStories });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+};
 
 const getSingleStory = async (req, res) => {
   try {
@@ -113,6 +125,6 @@ module.exports = {
   addDevelopment,
   addConclusion,
   getFinishedStories,
-  // getUnfinishedStories,
+  getUnfinishedStories,
   getSingleStory,
 };
