@@ -9,10 +9,13 @@ const validateDevLogic = async (req, res, next) => {
   }
   try {
     // check if user already add a section to that story.
-    const alreadyAuthor = await Story.findById(id);
+    const storyAuthor = await Story.findById(id);
+    if (!storyAuthor) {
+      throw new Error("Story not found!");
+    }
     if (
-      alreadyAuthor.intro.author === req.user ||
-      alreadyAuthor.development.author === req.user
+      storyAuthor.intro.author === req.user ||
+      storyAuthor.development.author === req.user
     ) {
       return res
         .status(401)

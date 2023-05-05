@@ -20,7 +20,7 @@ const createStory = async (req, res) => {
     if (error.code === 11000) {
       return res.status(400).json({ message: "Title must be unique!" });
     }
-    res.json({ error });
+    res.json({ error: error.message });
   }
 };
 
@@ -41,7 +41,7 @@ const addDevelopment = async (req, res) => {
     res.status(201).json({ message: "Development added to story", story: dev });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -67,7 +67,7 @@ const addConclusion = async (req, res) => {
     res.status(201).json({ message: "Conclusion added to story", conc });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -115,7 +115,7 @@ const getSingleStory = async (req, res) => {
     res.json({ story });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: error });
+    res.status(500).json({ error: error.message });
   }
 };
 

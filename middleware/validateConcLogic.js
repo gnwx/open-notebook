@@ -15,7 +15,7 @@ const validateConcLogic = async (req, res, next) => {
     ) {
       return res
         .status(401)
-        .json({ message: "You can only 1 section write to a story." });
+        .json({ message: "You can only write one section to a story." });
     }
 
     const story = await Story.findById(id).exists("conclusion");

@@ -8,6 +8,8 @@ const { validateConcLogic } = require("../middleware/validateConcLogic");
 const { validateCreateStory } = require("../middleware/validateCreateStory");
 const { validateBody } = require("../middleware/validateBody");
 const auth = require("../middleware/checkAuth");
+
+//functions
 const {
   createStory,
   addDevelopment,
