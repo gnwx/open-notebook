@@ -17,7 +17,7 @@ const createStory = async (req, res) => {
   } catch (error) {
     console.error(error);
 
-    // handle title from schema validation
+    // handle title from schema validation: title=unique
     if (error.code === 11000) {
       return res.status(400).json({ message: "Title must be unique!" });
     }

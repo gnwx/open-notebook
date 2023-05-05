@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 
 const storyRoutes = require("./routes/storyRoutes");
+const userRoutes = require("./routes/userRoutes");
+
 const connectDB = require("./db");
 
 require("dotenv").config();
@@ -19,7 +21,7 @@ app.use((req, res, next) => {
   next();
 });
 // user routes
-// app.use("/api/user",userRoutes);
+app.use("/api/user", userRoutes);
 
 // story routes
 app.use("/api/stories", storyRoutes);
