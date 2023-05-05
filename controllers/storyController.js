@@ -3,14 +3,13 @@ const Story = require("../models/storyModel");
 // Create a new story
 const createStory = async (req, res) => {
   try {
-    const { title, category, author, body } = req.body;
-
+    const { title, category, body } = req.body;
+    console.log(req.user);
     const story = await Story.create({
       title,
       category,
-      intro: { author, body },
+      intro: { author: req.user, body },
     });
-
     res
       .status(201)
       .json({ message: "Story created successfully", story: story });
@@ -29,14 +28,14 @@ const createStory = async (req, res) => {
 const addDevelopment = async (req, res) => {
   try {
     const { id } = req.params;
-    const { author, body } = req.body;
+    const { body } = req.body;
 
-    if (!author || !body) {
+    if (!body) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
     const dev = await Story.findByIdAndUpdate(id, {
-      development: { author, body },
+      development: { author: req.user, body },
     });
 
     res.status(201).json({ message: "Development added to story", story: dev });
@@ -50,9 +49,9 @@ const addDevelopment = async (req, res) => {
 const addConclusion = async (req, res) => {
   try {
     const { id } = req.params;
-    const { author, body } = req.body;
+    const { body } = req.body;
 
-    if (!author || !body) {
+    if (!body) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -62,7 +61,7 @@ const addConclusion = async (req, res) => {
       return res.status(404).json({ message: "Story not found" });
     }
     const conc = await Story.findByIdAndUpdate(id, {
-      conclusion: { author, body },
+      conclusion: { author: req.user, body },
     });
 
     res.status(201).json({ message: "Conclusion added to story", conc });

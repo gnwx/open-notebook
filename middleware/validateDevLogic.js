@@ -7,11 +7,28 @@ const validateDevLogic = async (req, res, next) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ message: "Invalid story ID" });
   }
-  const story = await Story.findById(id).exists("development");
-  if (story) {
-    return res.json({ message: "There is a dev already" });
+  try {
+    // check if user already add a section to that story.
+    const alreadyAuthor = await Story.findById(id);
+    if (
+      alreadyAuthor.intro.author === req.user ||
+      alreadyAuthor.development.author === req.user
+    ) {
+      return res
+        .status(401)
+        .json({ message: "You can only write one section to a story." });
+    }
+
+    // check if dev section exists.
+    const story = await Story.findById(id).exists("development");
+    if (story) {
+      return res.json({ message: "There is a dev already" });
+    }
+    return next();
+  } catch (error) {
+    console.log(error);
+    res.json({ error: error.message });
   }
-  return next();
 };
 
 module.exports = { validateDevLogic };

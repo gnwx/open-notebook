@@ -11,8 +11,8 @@ const verifyToken = (req, res, next) => {
 
   const token = authHeader.split(" ")[1];
   try {
-    const user = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = user;
+    const { username } = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = username;
     next();
   } catch (error) {
     res.status(401).json({ succes: false, message: error.message });
