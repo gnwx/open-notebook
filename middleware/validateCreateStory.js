@@ -2,8 +2,8 @@ const { body, validationResult } = require("express-validator");
 
 const validateCreateStory = [
   body("title")
-    .isLength({ min: 4 })
-    .withMessage("Title must be at least 4 characters"),
+    .isLength({ min: 4, max: 40 })
+    .withMessage("Title must be at least 4 characters max 40"),
   body("category")
     .isIn([
       "Fantasy",
