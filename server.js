@@ -11,9 +11,14 @@ require("dotenv").config();
 
 const app = express();
 const port = process.env.PORT || 7000;
-
+const orig = process.env.CORS;
 //middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: orig,
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 // for method log
