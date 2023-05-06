@@ -27,9 +27,10 @@ const registerUser = async (req, res) => {
       password: hashedPass,
     });
 
-    res
-      .status(201)
-      .json({ succes: true, message: "User created succesfully!", user: user });
+    res.status(201).json({
+      success: true,
+      message: "User created succesfully!",
+    });
   } catch (error) {
     if (error.code === 11000) {
       return res.status(402).json({
