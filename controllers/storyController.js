@@ -12,15 +12,17 @@ const createStory = async (req, res) => {
     });
     res
       .status(201)
-      .json({ message: "Story created successfully", story: story });
+      .json({ success: true, message: "Story created successfully" });
   } catch (error) {
     console.error(error);
 
     // handle title from schema validation: title=unique
     if (error.code === 11000) {
-      return res.status(400).json({ message: "Title must be unique!" });
+      return res
+        .status(409)
+        .json({ success: false, message: "Title must be unique!" });
     }
-    res.json({ error: error.message });
+    res.json({ success: false, error: error.message });
   }
 };
 
@@ -30,18 +32,16 @@ const addDevelopment = async (req, res) => {
     const { id } = req.params;
     const { body } = req.body;
 
-    if (!body) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-
-    const dev = await Story.findByIdAndUpdate(id, {
+    await Story.findByIdAndUpdate(id, {
       development: { author: req.user, body },
     });
 
-    res.status(201).json({ message: "Development added to story", story: dev });
+    res
+      .status(201)
+      .json({ success: true, message: "Development added to story" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ success: false, error: error.message });
   }
 };
 
@@ -51,23 +51,23 @@ const addConclusion = async (req, res) => {
     const { id } = req.params;
     const { body } = req.body;
 
-    if (!body) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-
     const story = await Story.findById(id);
 
     if (!story) {
-      return res.status(404).json({ message: "Story not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Story not found" });
     }
-    const conc = await Story.findByIdAndUpdate(id, {
+    await Story.findByIdAndUpdate(id, {
       conclusion: { author: req.user, body },
     });
 
-    res.status(201).json({ message: "Conclusion added to story", conc });
+    res
+      .status(201)
+      .json({ success: true, message: "Conclusion added to story" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ success: false, error: error.message });
   }
 };
 
@@ -82,10 +82,10 @@ const getFinishedStories = async (req, res) => {
       .lean()
       .orFail(new Error("There are no finished stories!"));
 
-    res.status(200).json({ stories });
+    res.status(200).json({ success: true, stories });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ success: false, error: error.message });
   }
 };
 
@@ -98,10 +98,10 @@ const getUnfinishedStories = async (req, res) => {
     })
       .lean()
       .orFail(new Error("There are no unfinished stories!"));
-    res.json({ unfinishedStories });
+    res.status(200).json({ success: true, unfinishedStories });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ success: false, error: err.message });
   }
 };
 
@@ -112,10 +112,10 @@ const getSingleStory = async (req, res) => {
     if (!story) {
       throw new Error("Story couldn't find!");
     }
-    res.json({ story });
+    res.status(200).json({ success: true, story });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ success: false, error: error.message });
   }
 };
 
