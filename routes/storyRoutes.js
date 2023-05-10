@@ -17,6 +17,7 @@ const {
   getFinishedStories,
   getUnfinishedStories,
   getSingleStory,
+  getMyStories,
 } = require("../controllers/storyController");
 
 //create new post || intro
@@ -37,4 +38,6 @@ router.get("/unfinished", getUnfinishedStories);
 // get single story
 router.get("/:id", getSingleStory);
 
+// get user's stories
+router.get("/mystories/:username", getMyStories);
 module.exports = router;

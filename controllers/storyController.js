@@ -1,11 +1,10 @@
 const Story = require("../models/storyModel");
-
 // Create a new story
 const createStory = async (req, res) => {
   try {
     const { title, category, body } = req.body;
     console.log(req.user);
-    const story = await Story.create({
+    await Story.create({
       title,
       category,
       intro: { author: req.user, body },
@@ -119,6 +118,31 @@ const getSingleStory = async (req, res) => {
   }
 };
 
+const getMyStories = async (req, res) => {
+  const { username } = req.params;
+
+  try {
+    const stories = await Story.find({
+      $or: [
+        { "intro.author": username },
+        { "development.author": username },
+        { "conclusion.author": username },
+      ],
+    });
+
+    if (stories.length === 0) {
+      return res
+        .status(404)
+        .json({ error: "No stories found for the specified username." });
+    }
+
+    return res.status(200).json({ success: true, myStories: stories });
+  } catch (error) {
+    console.error("Error retrieving stories:", error);
+    return res.status(500).json({ error: "Internal server error." });
+  }
+};
+
 module.exports = {
   createStory,
   addDevelopment,
@@ -126,4 +150,5 @@ module.exports = {
   getFinishedStories,
   getUnfinishedStories,
   getSingleStory,
+  getMyStories,
 };
