@@ -128,7 +128,7 @@ const getMyStories = async (req, res) => {
         { "development.author": username },
         { "conclusion.author": username },
       ],
-    });
+    }).lean();
 
     if (stories.length === 0) {
       return res
