@@ -1,4 +1,6 @@
 <h1>Open-notebook</h1>
+
+
 ![Screenshot from 2023-05-10 19-08-08](https://github.com/gravityNotWorking/open-notebook/assets/77449139/8a3cf2b9-a5b2-4836-841b-1898c340f609)
 _Open-notebook_ is a MERN stack application that offers a unique approach to collaborative storytelling. Users can create and share stories, but each user is limited to contributing only one part of the story, such as the beginning. They are unable to add the development or conclusion to the story. This creates an interesting collaborative storytelling experience.
 
